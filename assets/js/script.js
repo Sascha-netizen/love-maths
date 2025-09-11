@@ -14,9 +14,13 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         });
     }
-    runGame("addition");
-});
 
+    document.getElementById("answer-box").addEventListener("keydown", function(event) {
+        if (event.key === "Enter") {
+            checkAnswer();
+        }
+    });
+});
 
 /**
  * The main game 'loop', called when the script is first loaded
