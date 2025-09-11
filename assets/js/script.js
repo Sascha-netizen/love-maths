@@ -35,11 +35,16 @@ function runGame(gameType) {
         displaySubtractQuestion(num1, num2);
     } else if (gameType === "multiply") { 
         displayMultiplyQuestion(num1, num2); 
+    } else if (gameType === "division") {
+        // Generate clean division with reasonable numbers
+        num2 = Math.floor(Math.random() * 12) + 1; // divisor: 1-12
+        let quotient = Math.floor(Math.random() * 12) + 1; // quotient: 1-12
+        num1 = num2 * quotient; // dividend that divides evenly
+        displayDivisionQuestion(num1, num2);
     } else {
         alert(`Unknown game type ${gameType}`);
         throw `Unknown game type ${gameType}. Aborting!`;
     }
-    
 }
 
 
@@ -48,7 +53,20 @@ function runGame(gameType) {
  * calculateCorrectAnswer array
  */
 function checkAnswer() {
-    let userAnswer = parseInt(document.getElementById("answer-box").value);
+    let userAnswerInput = document.getElementById("answer-box").value;
+    
+
+    if (!userAnswerInput.trim()) {
+        alert("Please enter an answer!");
+        return;
+    }
+    
+    let userAnswer = parseInt(userAnswerInput);
+    if (isNaN(userAnswer)) {
+        alert("Please enter a valid number!");
+        return;
+    }
+    
     let calculatedAnswer = calculateCorrectAnswer();
     let isCorrect = userAnswer === calculatedAnswer[0];
 
@@ -59,8 +77,15 @@ function checkAnswer() {
         alert(`Awwww...you answered ${userAnswer}. The correct answer was ${calculatedAnswer[0]}!`);
         incrementWrongAnswer();
     }
+    
+    // Clear input and focus for next question
+    document.getElementById("answer-box").value = "";
+    document.getElementById("answer-box").focus();
+    
     runGame(calculatedAnswer[1]);
 }
+
+
 
 
 /**
@@ -79,6 +104,8 @@ function calculateCorrectAnswer() {
         return [operand1 - operand2, "subtract"];
     } else if (operator === "x") {
         return [operand1 * operand2, "multiply"];
+    } else if (operator === ":") {
+        return [operand1 / operand2, "division"];
     } else {
         alert(`Unimplemented operator ${operator}`);
         throw `Unimplemented operator ${operator}. Aborting!`;
@@ -126,8 +153,23 @@ function displaySubtractQuestion(operand1, operand2) {
     document.getElementById("operator").textContent = "-";
 }
 
+
+/**
+ * This function displays the multiplication question
+ */
+
 function displayMultiplyQuestion(operand1, operand2) {
     document.getElementById("operand1").textContent = operand1;
     document.getElementById("operand2").textContent = operand2;
     document.getElementById("operator").textContent = "x";
+}
+
+/**
+ * This function displays the division question
+ */
+
+function displayDivisionQuestion(operand1, operand2) {
+    document.getElementById("operand1").textContent = operand1;
+    document.getElementById("operand2").textContent = operand2;
+    document.getElementById("operator").textContent = ":";
 }
